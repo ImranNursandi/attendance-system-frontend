@@ -37,7 +37,7 @@ const EmployeeForm = () => {
       employee_id: "",
       department_id: "",
       name: "",
-      email: "", // Only used for create mode
+      email: "",
       phone: "",
       address: "",
       position: "",
@@ -109,30 +109,36 @@ const EmployeeForm = () => {
 
           if (responseData.user_account?.created) {
             toast.success(
-              <div>
-                <p className="font-bold text-lg mb-2">
+              <div className="text-black">
+                <p className="font-bold text-lg mb-3">
                   ✅ Employee Created Successfully!
                 </p>
-                <div className="space-y-1 text-sm">
-                  <p>
-                    <span className="font-semibold">Employee ID:</span>{" "}
-                    <span className="badge badge-primary">
+                <div className="space-y-2 text-sm bg-gray-800/50 p-4 rounded-lg">
+                  <div className="flex items-center gap-2">
+                    <span className="font-semibold text-gray-300">
+                      Employee ID:
+                    </span>
+                    <span className="badge badge-primary bg-blue-600 border-blue-700">
                       {generatedEmployeeId}
                     </span>
-                  </p>
-                  <p>
-                    <span className="font-semibold">Username:</span>{" "}
-                    <span className="badge badge-outline">
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="font-semibold text-gray-300">
+                      Username:
+                    </span>
+                    <span className="badge badge-outline border-gray-600 text-gray-300">
                       {responseData.user_account.username}
                     </span>
-                  </p>
-                  <p>
-                    <span className="font-semibold">Default Password:</span>{" "}
-                    <span className="badge badge-warning">
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="font-semibold text-gray-300">
+                      Default Password:
+                    </span>
+                    <span className="badge badge-warning bg-orange-600 border-orange-700">
                       {responseData.user_account.password}
                     </span>
-                  </p>
-                  <p className="text-xs text-gray-600 mt-2">
+                  </div>
+                  <p className="text-xs text-gray-400 mt-2 border-t border-gray-700 pt-2">
                     User account created automatically. Employee must change
                     password on first login.
                   </p>
@@ -141,15 +147,18 @@ const EmployeeForm = () => {
               {
                 autoClose: 15000,
                 closeButton: true,
-                className: "toast-success",
+                className: "bg-gray-800 border border-gray-700",
               }
             );
           } else {
             toast.success(
-              <div>
+              <div className="text-white">
                 <p className="font-bold">Employee Created Successfully!</p>
-                <p className="text-sm">
-                  Employee ID: <strong>{generatedEmployeeId}</strong>
+                <p className="text-sm text-gray-300">
+                  Employee ID:{" "}
+                  <strong className="text-blue-400">
+                    {generatedEmployeeId}
+                  </strong>
                 </p>
               </div>
             );
@@ -177,335 +186,418 @@ const EmployeeForm = () => {
   // Show loading while employee data is being fetched
   if (isEdit && employeeLoading) {
     return (
-      <div className="flex justify-center items-center min-h-64">
-        <span className="loading loading-spinner loading-lg text-primary"></span>
-        <span className="ml-3">Loading employee data...</span>
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-6">
+        <div className="max-w-4xl mx-auto flex justify-center items-center min-h-64">
+          <div className="text-center">
+            <div className="loading loading-spinner loading-lg text-blue-400"></div>
+            <p className="text-gray-400 mt-3">Loading employee data...</p>
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">
-          {isEdit ? "Edit Employee" : "Add New Employee"}
-        </h1>
-        <button
-          onClick={() => navigate("/employees")}
-          className="btn btn-outline btn-sm"
-        >
-          ← Back to List
-        </button>
-      </div>
-
-      {/* Information Card */}
-      <div
-        className={`alert ${isEdit ? "alert-info" : "alert-success"} shadow-lg`}
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          className="stroke-current shrink-0 w-6 h-6"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-          ></path>
-        </svg>
-        <div>
-          <h3 className="font-bold">
-            {isEdit ? "Editing Employee" : "New Employee Information"}
-          </h3>
-          <div className="text-xs">
-            {isEdit ? (
-              <div>
-                Update employee details. Email cannot be changed here as it's
-                linked to the user account.
-              </div>
-            ) : (
-              <div>
-                A system user account will be automatically created with:
-                <ul className="mt-1 ml-4 list-disc">
-                  <li>
-                    <strong>Employee ID:</strong> Automatically generated by
-                    system
-                  </li>
-                  <li>
-                    <strong>Username:</strong> First part of email (before @)
-                    {email && (
-                      <span className="ml-1 badge badge-ghost badge-xs">
-                        Preview: {getUsernamePreview()}
-                      </span>
-                    )}
-                  </li>
-                  <li>
-                    <strong>Default Password:</strong> Welcome123
-                  </li>
-                  <li>
-                    <strong>Role:</strong> Employee
-                  </li>
-                  <li>Employee must change password on first login</li>
-                </ul>
-              </div>
-            )}
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-6">
+      <div className="max-w-4xl mx-auto space-y-8">
+        {/* Header */}
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+          <div>
+            <h1 className="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+              {isEdit ? "Edit Employee" : "Add New Employee"}
+            </h1>
+            <p className="text-gray-400 mt-2">
+              {isEdit
+                ? "Update employee details and information"
+                : "Register a new employee in the system"}
+            </p>
           </div>
+          <button
+            onClick={() => navigate("/employees")}
+            className="btn btn-outline border-gray-600 text-gray-300 hover:bg-gray-700 hover:border-gray-500 px-6"
+          >
+            ← Back to List
+          </button>
         </div>
-      </div>
 
-      <div className="card bg-base-100 shadow-xl">
-        <div className="card-body">
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            {/* Employee ID Display (Edit Mode) */}
-            {isEdit && employee && (
-              <div className="form-control">
-                <label className="label">
-                  <span className="label-text font-semibold">Employee ID</span>
-                </label>
-                <div className="p-3 bg-base-200 rounded-lg border">
-                  <span className="font-mono text-lg font-bold text-primary">
-                    {employee.employee_id}
-                  </span>
-                  <p className="text-xs text-gray-500 mt-1">
-                    System-generated employee identifier
+        {/* Information Card */}
+        <div
+          className={`bg-gradient-to-r ${
+            isEdit
+              ? "from-blue-900/50 to-blue-800/30"
+              : "from-green-900/50 to-green-800/30"
+          } rounded-2xl shadow-lg border ${
+            isEdit ? "border-blue-800/50" : "border-green-800/50"
+          } p-6`}
+        >
+          <div className="flex items-start gap-4">
+            <div
+              className={`p-3 rounded-xl ${
+                isEdit ? "bg-blue-900/50" : "bg-green-900/50"
+              } border ${
+                isEdit ? "border-blue-800/50" : "border-green-800/50"
+              }`}
+            >
+              <span className="text-2xl">{isEdit ? "📝" : "👥"}</span>
+            </div>
+            <div className="flex-1">
+              <h3 className="font-bold text-white text-lg mb-3">
+                {isEdit ? "Editing Employee" : "New Employee Information"}
+              </h3>
+              <div className="text-gray-300 text-sm">
+                {isEdit ? (
+                  <p>
+                    Update employee details. Email cannot be changed here as
+                    it's linked to the user account.
                   </p>
-                </div>
-              </div>
-            )}
-
-            {/* Basic Information Section */}
-            <div className="border-b pb-6">
-              <h2 className="text-xl font-semibold mb-4 text-primary">
-                Basic Information
-              </h2>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                <div className="form-control flex flex-col gap-2">
-                  <label className="label">
-                    <span className="label-text font-semibold">
-                      Full Name *
-                    </span>
-                  </label>
-                  <input
-                    type="text"
-                    className="input input-bordered input-md"
-                    {...register("name", { required: "Name is required" })}
-                    placeholder="John Doe"
-                  />
-                  {errors.name && (
-                    <span className="text-error text-sm mt-1">
-                      {errors.name.message}
-                    </span>
-                  )}
-                </div>
-
-                {/* Email Field - Only show for Create mode */}
-                {!isEdit && (
-                  <div className="form-control flex flex-col gap-2">
-                    <label className="label">
-                      <span className="label-text font-semibold">Email *</span>
-                    </label>
-                    <input
-                      type="email"
-                      className="input input-bordered input-md"
-                      {...register("email", {
-                        required: "Email is required",
-                        pattern: {
-                          value: /^\S+@\S+$/i,
-                          message: "Invalid email address",
-                        },
-                      })}
-                      placeholder="john.doe@company.com"
-                    />
-                    {errors.email && (
-                      <span className="text-error text-sm mt-1">
-                        {errors.email.message}
-                      </span>
-                    )}
-                    {email && (
-                      <div className="text-xs text-info mt-1">
-                        Username will be:{" "}
-                        <strong>{getUsernamePreview()}</strong>
-                      </div>
-                    )}
+                ) : (
+                  <div className="space-y-3">
+                    <p>
+                      A system user account will be automatically created with
+                      the following details:
+                    </p>
+                    <ul className="ml-4 space-y-2">
+                      <li className="flex items-center gap-3">
+                        <span className="w-2 h-2 bg-blue-400 rounded-full flex-shrink-0"></span>
+                        <span>
+                          <strong className="text-blue-300">
+                            Employee ID:
+                          </strong>{" "}
+                          Automatically generated by system
+                        </span>
+                      </li>
+                      <li className="flex items-center gap-3">
+                        <span className="w-2 h-2 bg-blue-400 rounded-full flex-shrink-0"></span>
+                        <span>
+                          <strong className="text-blue-300">Username:</strong>{" "}
+                          First part of email (before @)
+                          {email && (
+                            <span className="ml-2 badge badge-ghost badge-sm bg-gray-700/50 border-gray-600">
+                              Preview: {getUsernamePreview()}
+                            </span>
+                          )}
+                        </span>
+                      </li>
+                      <li className="flex items-center gap-3">
+                        <span className="w-2 h-2 bg-blue-400 rounded-full flex-shrink-0"></span>
+                        <span>
+                          <strong className="text-blue-300">
+                            Default Password:
+                          </strong>{" "}
+                          Welcome123
+                        </span>
+                      </li>
+                      <li className="flex items-center gap-3">
+                        <span className="w-2 h-2 bg-blue-400 rounded-full flex-shrink-0"></span>
+                        <span>
+                          <strong className="text-blue-300">Role:</strong>{" "}
+                          Employee
+                        </span>
+                      </li>
+                      <li className="flex items-center gap-3">
+                        <span className="w-2 h-2 bg-blue-400 rounded-full flex-shrink-0"></span>
+                        <span>
+                          Employee must change password on first login
+                        </span>
+                      </li>
+                    </ul>
                   </div>
                 )}
+              </div>
+            </div>
+          </div>
+        </div>
 
-                <div className="form-control flex flex-col gap-2">
-                  <label className="label">
-                    <span className="label-text font-semibold">Phone</span>
+        {/* Main Form */}
+        <div className="bg-gray-800 rounded-2xl shadow-lg border border-gray-700 overflow-hidden">
+          <div className="p-6 border-b border-gray-700">
+            <div className="flex items-center gap-3">
+              <div className="w-2 h-6 bg-blue-500 rounded-full"></div>
+              <h2 className="text-xl font-bold text-white">Employee Details</h2>
+            </div>
+          </div>
+
+          <div className="p-6">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+              {/* Employee ID Display (Edit Mode) */}
+              {isEdit && employee && (
+                <div className="bg-gray-700/50 rounded-xl p-6 border border-gray-600 mb-6">
+                  <label className="block text-sm font-semibold text-gray-300 mb-3">
+                    Employee ID
                   </label>
-                  <input
-                    type="tel"
-                    className="input input-bordered input-md"
-                    {...register("phone")}
-                    placeholder="+1234567890"
-                  />
+                  <div className="flex items-center gap-4">
+                    <span className="font-mono text-xl font-bold text-blue-400 bg-blue-900/30 px-4 py-3 rounded-lg border border-blue-800/50">
+                      {employee.employee_id}
+                    </span>
+                    <p className="text-sm text-gray-400">
+                      System-generated employee identifier
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {/* Basic Information Section */}
+              <div className="space-y-6 pb-8 border-b border-gray-700">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-2 h-6 bg-green-500 rounded-full"></div>
+                  <h3 className="text-lg font-bold text-white">
+                    Basic Information
+                  </h3>
                 </div>
 
-                {/* Employee ID Input (Only for edit mode if needed) */}
-                {isEdit && (
-                  <div className="form-control flex flex-col gap-2">
-                    <label className="label">
-                      <span className="label-text font-semibold">
-                        Employee ID
-                      </span>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {/* Name Field */}
+                  <div className="space-y-2">
+                    <label className="block text-sm font-semibold text-gray-300">
+                      Full Name *
                     </label>
                     <input
                       type="text"
-                      className="input input-bordered input-md"
-                      {...register("employee_id")}
-                      placeholder="EMP001"
+                      className="w-full input input-bordered bg-gray-700 border-gray-600 text-white placeholder-gray-500 focus:border-blue-500 h-12"
+                      {...register("name", { required: "Name is required" })}
+                      placeholder="John Doe"
                     />
-                    <p className="text-xs text-gray-500">
-                      Only change if absolutely necessary
-                    </p>
+                    {errors.name && (
+                      <div className="text-red-400 text-sm flex items-center gap-2 mt-1">
+                        <span>⚠️</span>
+                        {errors.name.message}
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
-            </div>
 
-            {/* Employment Details Section */}
-            <div className="border-b pb-6">
-              <h2 className="text-xl font-semibold mb-4 text-primary">
-                Employment Details
-              </h2>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                <div className="form-control flex flex-col gap-2">
-                  <label className="label">
-                    <span className="label-text font-semibold">
-                      Department *
-                    </span>
-                  </label>
-                  <select
-                    className="select select-bordered select-md"
-                    {...register("department_id", {
-                      required: "Department is required",
-                    })}
-                  >
-                    <option value="">Select Department</option>
-                    {departments.map((dept) => (
-                      <option key={dept.id} value={dept.id}>
-                        {dept.name}
-                      </option>
-                    ))}
-                  </select>
-                  {errors.department_id && (
-                    <span className="text-error text-sm mt-1">
-                      {errors.department_id.message}
-                    </span>
+                  {/* Email Field - Only show for Create mode */}
+                  {!isEdit && (
+                    <div className="space-y-2">
+                      <label className="block text-sm font-semibold text-gray-300">
+                        Email *
+                      </label>
+                      <input
+                        type="email"
+                        className="w-full input input-bordered bg-gray-700 border-gray-600 text-white placeholder-gray-500 focus:border-blue-500 h-12"
+                        {...register("email", {
+                          required: "Email is required",
+                          pattern: {
+                            value: /^\S+@\S+$/i,
+                            message: "Invalid email address",
+                          },
+                        })}
+                        placeholder="john.doe@company.com"
+                      />
+                      {errors.email && (
+                        <div className="text-red-400 text-sm flex items-center gap-2 mt-1">
+                          <span>⚠️</span>
+                          {errors.email.message}
+                        </div>
+                      )}
+                      {email && (
+                        <div className="text-sm text-blue-400 bg-blue-900/20 p-3 rounded border border-blue-800/30 mt-2">
+                          <strong>Username Preview:</strong>{" "}
+                          {getUsernamePreview()}
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Phone Field */}
+                  <div className="space-y-2">
+                    <label className="block text-sm font-semibold text-gray-300">
+                      Phone
+                    </label>
+                    <input
+                      type="tel"
+                      className="w-full input input-bordered bg-gray-700 border-gray-600 text-white placeholder-gray-500 focus:border-blue-500 h-12"
+                      {...register("phone")}
+                      placeholder="+1234567890"
+                    />
+                  </div>
+
+                  {/* Employee ID Input (Only for edit mode if needed) */}
+                  {isEdit && (
+                    <div className="space-y-2">
+                      <label className="block text-sm font-semibold text-gray-300">
+                        Employee ID
+                      </label>
+                      <input
+                        type="text"
+                        className="w-full input input-bordered bg-gray-700 border-gray-600 text-white placeholder-gray-500 focus:border-blue-500 h-12"
+                        {...register("employee_id")}
+                        placeholder="EMP001"
+                      />
+                      <p className="text-xs text-gray-500 mt-2">
+                        Only change if absolutely necessary
+                      </p>
+                    </div>
                   )}
                 </div>
+              </div>
 
-                <div className="form-control flex flex-col gap-2">
-                  <label className="label">
-                    <span className="label-text font-semibold">Position</span>
-                  </label>
-                  <input
-                    type="text"
-                    className="input input-bordered input-md"
-                    {...register("position")}
-                    placeholder="Software Engineer"
-                  />
+              {/* Employment Details Section */}
+              <div className="space-y-6 pb-8 border-b border-gray-700">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-2 h-6 bg-purple-500 rounded-full"></div>
+                  <h3 className="text-lg font-bold text-white">
+                    Employment Details
+                  </h3>
                 </div>
 
-                <div className="form-control flex flex-col gap-2">
-                  <label className="label">
-                    <span className="label-text font-semibold">Join Date</span>
-                  </label>
-                  <input
-                    type="date"
-                    className="input input-bordered input-md"
-                    {...register("join_date")}
-                  />
-                </div>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {/* Department Field */}
+                  <div className="space-y-2">
+                    <label className="block text-sm font-semibold text-gray-300">
+                      Department *
+                    </label>
+                    <select
+                      className="w-full select select-bordered bg-gray-700 border-gray-600 text-white focus:border-blue-500 h-12"
+                      {...register("department_id", {
+                        required: "Department is required",
+                      })}
+                    >
+                      <option value="" className="text-gray-500">
+                        Select Department
+                      </option>
+                      {departments.map((dept) => (
+                        <option key={dept.id} value={dept.id}>
+                          {dept.name}
+                        </option>
+                      ))}
+                    </select>
+                    {errors.department_id && (
+                      <div className="text-red-400 text-sm flex items-center gap-2 mt-1">
+                        <span>⚠️</span>
+                        {errors.department_id.message}
+                      </div>
+                    )}
+                  </div>
 
-                <div className="form-control flex flex-col gap-2">
-                  <label className="label">
-                    <span className="label-text font-semibold">Status</span>
-                  </label>
-                  <select
-                    className="select select-bordered select-md"
-                    {...register("status")}
-                  >
-                    <option value="active">Active</option>
-                    <option value="inactive">Inactive</option>
-                    <option value="suspended">Suspended</option>
-                  </select>
+                  {/* Position Field */}
+                  <div className="space-y-2">
+                    <label className="block text-sm font-semibold text-gray-300">
+                      Position
+                    </label>
+                    <input
+                      type="text"
+                      className="w-full input input-bordered bg-gray-700 border-gray-600 text-white placeholder-gray-500 focus:border-blue-500 h-12"
+                      {...register("position")}
+                      placeholder="Software Engineer"
+                    />
+                  </div>
+
+                  {/* Join Date Field */}
+                  <div className="space-y-2">
+                    <label className="block text-sm font-semibold text-gray-300">
+                      Join Date
+                    </label>
+                    <input
+                      type="date"
+                      className="w-full input input-bordered bg-gray-700 border-gray-600 text-white focus:border-blue-500 h-12"
+                      {...register("join_date")}
+                    />
+                  </div>
+
+                  {/* Status Field */}
+                  <div className="space-y-2">
+                    <label className="block text-sm font-semibold text-gray-300">
+                      Status
+                    </label>
+                    <select
+                      className="w-full select select-bordered bg-gray-700 border-gray-600 text-white focus:border-blue-500 h-12"
+                      {...register("status")}
+                    >
+                      <option value="active" className="text-green-400">
+                        Active
+                      </option>
+                      <option value="inactive" className="text-gray-400">
+                        Inactive
+                      </option>
+                      <option value="suspended" className="text-orange-400">
+                        Suspended
+                      </option>
+                    </select>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* Address Section */}
-            <div>
-              <h2 className="text-xl font-semibold mb-4 text-primary">
-                Contact Information
-              </h2>
-              <div className="form-control flex flex-col gap-2">
-                <label className="label">
-                  <span className="label-text font-semibold">Address *</span>
-                </label>
-                <textarea
-                  className="textarea textarea-bordered h-24 textarea-md"
-                  placeholder="Enter full address..."
-                  {...register("address", { required: "Address is required" })}
-                />
-                {errors.address && (
-                  <span className="text-error text-sm mt-1">
-                    {errors.address.message}
-                  </span>
-                )}
+              {/* Address Section */}
+              <div className="space-y-6">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-2 h-6 bg-orange-500 rounded-full"></div>
+                  <h3 className="text-lg font-bold text-white">
+                    Contact Information
+                  </h3>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="block text-sm font-semibold text-gray-300">
+                    Address *
+                  </label>
+                  <textarea
+                    className="w-full textarea textarea-bordered bg-gray-700 border-gray-600 text-white placeholder-gray-500 focus:border-blue-500 h-24 resize-none"
+                    placeholder="Enter full address..."
+                    {...register("address", {
+                      required: "Address is required",
+                    })}
+                  />
+                  {errors.address && (
+                    <div className="text-red-400 text-sm flex items-center gap-2 mt-1">
+                      <span>⚠️</span>
+                      {errors.address.message}
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
 
-            {/* Action Buttons */}
-            <div className="flex justify-end space-x-4 pt-4 border-t">
-              <button
-                type="button"
-                onClick={() => navigate("/employees")}
-                className="btn btn-outline btn-wide"
-                disabled={createMutation.isLoading || updateMutation.isLoading}
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="btn btn-primary btn-wide"
-                disabled={createMutation.isLoading || updateMutation.isLoading}
-              >
-                {createMutation.isLoading || updateMutation.isLoading ? (
-                  <>
-                    <span className="loading loading-spinner loading-sm"></span>
-                    {isEdit ? "Updating..." : "Creating..."}
-                  </>
-                ) : (
-                  <>{isEdit ? "Update Employee" : "Create Employee"}</>
-                )}
-              </button>
-            </div>
-          </form>
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row justify-end gap-4 pt-8 border-t border-gray-700">
+                <button
+                  type="button"
+                  onClick={() => navigate("/employees")}
+                  className="btn btn-outline border-gray-600 text-gray-300 hover:bg-gray-700 hover:border-gray-500 h-12 min-h-12 flex-1 sm:flex-none sm:w-32"
+                  disabled={
+                    createMutation.isLoading || updateMutation.isLoading
+                  }
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="btn bg-gradient-to-r from-blue-500 to-purple-600 border-none text-white hover:from-blue-600 hover:to-purple-700 h-12 min-h-12 flex-1 sm:flex-none sm:w-48"
+                  disabled={
+                    createMutation.isLoading || updateMutation.isLoading
+                  }
+                >
+                  {createMutation.isLoading || updateMutation.isLoading ? (
+                    <>
+                      <span className="loading loading-spinner loading-sm"></span>
+                      {isEdit ? "Updating..." : "Creating..."}
+                    </>
+                  ) : (
+                    <>{isEdit ? "Update Employee" : "Create Employee"}</>
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
-      </div>
 
-      {/* Loading State */}
-      {(createMutation.isLoading || updateMutation.isLoading) && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-base-100 p-6 rounded-lg shadow-xl">
-            <div className="flex items-center space-x-4">
-              <span className="loading loading-spinner loading-lg text-primary"></span>
-              <div>
-                <p className="font-semibold">
-                  {isEdit ? "Updating Employee..." : "Creating Employee..."}
-                </p>
-                <p className="text-sm text-gray-500">
-                  Please wait while we process your request
-                </p>
+        {/* Loading Overlay */}
+        {(createMutation.isLoading || updateMutation.isLoading) && (
+          <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50">
+            <div className="bg-gray-800 p-8 rounded-2xl shadow-xl border border-gray-700 max-w-md w-full mx-4">
+              <div className="flex items-center space-x-4">
+                <div className="loading loading-spinner loading-lg text-blue-400"></div>
+                <div>
+                  <p className="font-semibold text-white text-lg">
+                    {isEdit ? "Updating Employee..." : "Creating Employee..."}
+                  </p>
+                  <p className="text-gray-400 text-sm mt-1">
+                    Please wait while we process your request
+                  </p>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };

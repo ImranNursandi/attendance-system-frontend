@@ -22,24 +22,25 @@ const DepartmentList = () => {
   );
 
   // Status badge component
-  const StatusBadge = ({ status, isActive }) => {
-    if (status) {
-      const statusConfig = {
-        active: { label: "Active", color: "badge-success" },
-        inactive: { label: "Inactive", color: "badge-error" },
-      };
+  const StatusBadge = ({ status }) => {
+    const statusConfig = {
+      active: {
+        label: "Active",
+        color: "bg-green-900/50 text-green-300 border-green-800/50",
+      },
+      inactive: {
+        label: "Inactive",
+        color: "bg-red-900/50 text-red-300 border-red-800/50",
+      },
+    };
 
-      const config = statusConfig[status] || {
-        label: status,
-        color: "badge-info",
-      };
-      return <span className={`badge ${config.color}`}>{config.label}</span>;
-    }
+    const config = statusConfig[status] || {
+      label: status || "Unknown",
+      color: "bg-gray-700 text-gray-300 border-gray-600",
+    };
 
     return (
-      <span className={`badge ${isActive ? "badge-success" : "badge-error"}`}>
-        {isActive ? "Active" : "Inactive"}
-      </span>
+      <span className={`badge border ${config.color}`}>{config.label}</span>
     );
   };
 
@@ -71,121 +72,133 @@ const DepartmentList = () => {
 
   if (isLoading)
     return (
-      <div className="flex justify-center items-center min-h-64">
-        <span className="loading loading-spinner loading-lg text-primary"></span>
-        <span className="ml-3">Loading departments...</span>
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-6">
+        <div className="max-w-7xl mx-auto flex justify-center items-center min-h-64">
+          <div className="text-center">
+            <div className="loading loading-spinner loading-lg text-blue-400"></div>
+            <p className="text-gray-400 mt-3">Loading departments...</p>
+          </div>
+        </div>
       </div>
     );
 
   if (error)
     return (
-      <div className="alert alert-error shadow-lg">
-        <div>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="stroke-current flex-shrink-0 h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
-          <span>Error loading departments: {error.message}</span>
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="bg-red-900/50 border border-red-800/50 rounded-2xl p-6 text-white">
+            <div className="flex items-center gap-4">
+              <div className="text-2xl">⚠️</div>
+              <div className="flex-1">
+                <h3 className="font-bold text-lg">Error loading departments</h3>
+                <p className="text-red-200 mt-1">{error.message}</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     );
 
   return (
-    <div className="space-y-6">
-      {/* Header Section */}
-      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
-        <div>
-          <h1 className="text-3xl font-bold">Department Management</h1>
-          <p className="text-gray-600 mt-1">
-            Manage departments and their attendance rules
-          </p>
-        </div>
-        <Link to="/departments/new" className="btn btn-primary">
-          <svg
-            className="w-5 h-5 mr-2"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-6">
+      <div className="max-w-7xl mx-auto space-y-8">
+        {/* Header Section */}
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+          <div>
+            <h1 className="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+              Department Management
+            </h1>
+            <p className="text-gray-400 mt-2">
+              Manage departments and their attendance rules
+            </p>
+          </div>
+          <Link
+            to="/departments/new"
+            className="btn bg-gradient-to-r from-blue-500 to-purple-600 border-none text-white hover:from-blue-600 hover:to-purple-700 px-6"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M12 4v16m8-8H4"
-            />
-          </svg>
-          Add Department
-        </Link>
-      </div>
+            <svg
+              className="w-5 h-5 mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M12 4v16m8-8H4"
+              />
+            </svg>
+            Add Department
+          </Link>
+        </div>
 
-      {/* Stats Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="stat bg-base-200 rounded-lg">
-          <div className="stat-title">Total Departments</div>
-          <div className="stat-value text-primary">
-            {pagination.total || departments.length}
+        {/* Stats Overview */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="bg-gray-800 rounded-2xl p-6 border border-gray-700">
+            <div className="text-gray-400 text-sm font-semibold">
+              Total Departments
+            </div>
+            <div className="text-3xl font-bold text-blue-400 mt-2">
+              {pagination.total || departments.length}
+            </div>
+            <div className="text-gray-500 text-sm mt-1">All departments</div>
           </div>
-          <div className="stat-desc">All departments</div>
-        </div>
-        <div className="stat bg-base-200 rounded-lg">
-          <div className="stat-title">Active</div>
-          <div className="stat-value text-success">
-            {departments.filter((dept) => dept.status === "active").length}
+          <div className="bg-gray-800 rounded-2xl p-6 border border-gray-700">
+            <div className="text-gray-400 text-sm font-semibold">Active</div>
+            <div className="text-3xl font-bold text-green-400 mt-2">
+              {departments.filter((dept) => dept.status === "active").length}
+            </div>
+            <div className="text-gray-500 text-sm mt-1">Currently active</div>
           </div>
-          <div className="stat-desc">Currently active</div>
-        </div>
-        <div className="stat bg-base-200 rounded-lg">
-          <div className="stat-title">Total Employees</div>
-          <div className="stat-value text-secondary">
-            {departments.reduce(
-              (sum, dept) => sum + (dept.employee_count || 0),
-              0
-            )}
+          <div className="bg-gray-800 rounded-2xl p-6 border border-gray-700">
+            <div className="text-gray-400 text-sm font-semibold">
+              Total Employees
+            </div>
+            <div className="text-3xl font-bold text-purple-400 mt-2">
+              {departments.reduce(
+                (sum, dept) => sum + (dept.employee_count || 0),
+                0
+              )}
+            </div>
+            <div className="text-gray-500 text-sm mt-1">
+              Across all departments
+            </div>
           </div>
-          <div className="stat-desc">Across all departments</div>
-        </div>
-        <div className="stat bg-base-200 rounded-lg">
-          <div className="stat-title">Avg Employees</div>
-          <div className="stat-value text-accent">
-            {departments.length > 0
-              ? Math.round(
-                  departments.reduce(
-                    (sum, dept) => sum + (dept.employee_count || 0),
-                    0
-                  ) / departments.length
-                )
-              : 0}
+          <div className="bg-gray-800 rounded-2xl p-6 border border-gray-700">
+            <div className="text-gray-400 text-sm font-semibold">
+              Avg Employees
+            </div>
+            <div className="text-3xl font-bold text-cyan-400 mt-2">
+              {departments.length > 0
+                ? Math.round(
+                    departments.reduce(
+                      (sum, dept) => sum + (dept.employee_count || 0),
+                      0
+                    ) / departments.length
+                  )
+                : 0}
+            </div>
+            <div className="text-gray-500 text-sm mt-1">Per department</div>
           </div>
-          <div className="stat-desc">Per department</div>
         </div>
-      </div>
 
-      {/* Search Card */}
-      <div className="card bg-base-100 shadow-xl">
-        <div className="card-body">
-          <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
-            <div className="flex flex-col lg:flex-row gap-4 flex-1">
+        {/* Search Card */}
+        <div className="bg-gray-800 rounded-2xl shadow-lg border border-gray-700 p-6">
+          <div className="flex flex-col lg:flex-row gap-6 items-start lg:items-center justify-between">
+            <div className="flex flex-col lg:flex-row gap-4 flex-1 w-full">
               <div className="form-control flex-1">
-                <div className="input-group">
+                <div className="relative">
                   <input
                     type="text"
                     placeholder="Search departments by name or description..."
-                    className="input input-bordered flex-1"
+                    className="w-full input input-bordered bg-gray-700 border-gray-600 text-white placeholder-gray-500 pl-10 h-12"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
-                  <button className="btn btn-square">
+                  <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
                     <svg
-                      className="w-4 h-4"
+                      className="w-5 h-5"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -197,55 +210,80 @@ const DepartmentList = () => {
                         d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                       />
                     </svg>
-                  </button>
+                  </div>
                 </div>
               </div>
             </div>
-            <div className="text-sm opacity-75">
+            <div className="text-gray-400 text-sm bg-gray-700/50 px-3 py-2 rounded-lg border border-gray-600">
               {filteredDepartments.length} of {departments.length} departments
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Departments Table Card */}
-      <div className="card bg-base-100 shadow-xl">
-        <div className="card-body p-0">
+        {/* Departments Table Card */}
+        <div className="bg-gray-800 rounded-2xl shadow-lg border border-gray-700 overflow-hidden">
+          <div className="p-6 border-b border-gray-700">
+            <div className="flex items-center gap-3">
+              <div className="w-2 h-6 bg-green-500 rounded-full"></div>
+              <h2 className="text-xl font-bold text-white">Departments</h2>
+            </div>
+          </div>
+
           <div className="overflow-x-auto">
-            <table className="table table-zebra">
+            <table className="table w-full">
               <thead>
-                <tr className="bg-base-200">
-                  <th className="w-16">ID</th>
-                  <th className="min-w-[200px]">Department</th>
-                  <th className="min-w-[120px]">Max Clock In</th>
-                  <th className="min-w-[120px]">Max Clock Out</th>
-                  <th className="min-w-[120px]">Late Tolerance</th>
-                  <th className="min-w-[140px]">Early Leave Penalty</th>
-                  <th className="min-w-[120px]">Employees</th>
-                  <th className="min-w-[100px]">Status</th>
-                  <th className="min-w-[140px] text-center">Actions</th>
+                <tr className="border-b border-gray-700">
+                  <th className="bg-gray-750 text-gray-300 font-semibold w-16">
+                    ID
+                  </th>
+                  <th className="bg-gray-750 text-gray-300 font-semibold min-w-[200px]">
+                    Department
+                  </th>
+                  <th className="bg-gray-750 text-gray-300 font-semibold min-w-[120px] text-center">
+                    Max Clock In
+                  </th>
+                  <th className="bg-gray-750 text-gray-300 font-semibold min-w-[120px] text-center">
+                    Max Clock Out
+                  </th>
+                  <th className="bg-gray-750 text-gray-300 font-semibold min-w-[120px] text-center">
+                    Late Tolerance
+                  </th>
+                  <th className="bg-gray-750 text-gray-300 font-semibold min-w-[140px] text-center">
+                    Early Leave Penalty
+                  </th>
+                  <th className="bg-gray-750 text-gray-300 font-semibold min-w-[120px] text-center">
+                    Employees
+                  </th>
+                  <th className="bg-gray-750 text-gray-300 font-semibold min-w-[100px] text-center">
+                    Status
+                  </th>
+                  <th className="bg-gray-750 text-gray-300 font-semibold min-w-[140px] text-center">
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {filteredDepartments.map((dept) => (
                   <tr
                     key={dept.id}
-                    className="hover:bg-base-200 transition-colors"
+                    className="border-b border-gray-700 hover:bg-gray-750/50 transition-colors"
                   >
-                    <td className="font-semibold">{dept.id}</td>
+                    <td className="text-gray-300 font-medium">{dept.id}</td>
                     <td>
-                      <div className="flex items-center space-x-3 min-w-0">
+                      <div className="flex items-center space-x-4 min-w-0">
                         <div className="avatar placeholder flex-shrink-0">
-                          <div className="bg-secondary text-secondary-content rounded-full w-12">
+                          <div className="bg-gradient-to-br from-purple-500 to-pink-600 text-white rounded-xl w-12 h-12 flex items-center justify-center font-bold shadow-lg">
                             <span className="font-bold">
                               {dept.name?.charAt(0)?.toUpperCase() || "D"}
                             </span>
                           </div>
                         </div>
                         <div className="min-w-0 flex-1">
-                          <div className="font-bold truncate">{dept.name}</div>
+                          <div className="font-bold text-white truncate">
+                            {dept.name}
+                          </div>
                           {dept.description && (
-                            <div className="text-sm text-gray-600 truncate">
+                            <div className="text-sm text-gray-400 truncate">
                               {dept.description}
                             </div>
                           )}
@@ -254,7 +292,7 @@ const DepartmentList = () => {
                     </td>
                     <td>
                       <div className="flex justify-center">
-                        <span className="badge badge-info badge-lg font-mono whitespace-nowrap">
+                        <span className="badge bg-blue-900/50 text-blue-300 border-blue-800/50 font-mono whitespace-nowrap">
                           {dept.max_clock_in
                             ? dept.max_clock_in.slice(0, 5)
                             : "09:00"}
@@ -263,7 +301,7 @@ const DepartmentList = () => {
                     </td>
                     <td>
                       <div className="flex justify-center">
-                        <span className="badge badge-info badge-lg font-mono whitespace-nowrap">
+                        <span className="badge bg-blue-900/50 text-blue-300 border-blue-800/50 font-mono whitespace-nowrap">
                           {dept.max_clock_out
                             ? dept.max_clock_out.slice(0, 5)
                             : "17:00"}
@@ -272,31 +310,31 @@ const DepartmentList = () => {
                     </td>
                     <td>
                       <div className="flex justify-center">
-                        <span className="badge badge-warning whitespace-nowrap">
+                        <span className="badge bg-orange-900/50 text-orange-300 border-orange-800/50 whitespace-nowrap">
                           {dept.late_tolerance || 0} mins
                         </span>
                       </div>
                     </td>
                     <td>
                       <div className="flex justify-center">
-                        <span className="badge badge-warning whitespace-nowrap">
+                        <span className="badge bg-orange-900/50 text-orange-300 border-orange-800/50 whitespace-nowrap">
                           {dept.early_leave_penalty || 0} mins
                         </span>
                       </div>
                     </td>
                     <td>
-                      <div className="flex flex-col items-center space-y-1 min-w-0">
+                      <div className="flex flex-col items-center space-y-2 min-w-0">
                         <span
-                          className={`badge ${
+                          className={`badge border whitespace-nowrap ${
                             dept.employee_count > 0
-                              ? "badge-primary"
-                              : "badge-outline"
-                          } whitespace-nowrap`}
+                              ? "bg-purple-900/50 text-purple-300 border-purple-800/50"
+                              : "bg-gray-700 text-gray-300 border-gray-600"
+                          }`}
                         >
                           {dept.employee_count || 0} employees
                         </span>
                         {dept.employee_count > 0 && (
-                          <span className="text-xs text-gray-500 whitespace-nowrap">
+                          <span className="text-xs text-gray-400 whitespace-nowrap">
                             {Math.round(
                               (dept.employee_count /
                                 departments.reduce(
@@ -312,17 +350,14 @@ const DepartmentList = () => {
                     </td>
                     <td>
                       <div className="flex justify-center">
-                        <StatusBadge
-                          status={dept.status}
-                          isActive={dept.is_active}
-                        />
+                        <StatusBadge status={dept.status} />
                       </div>
                     </td>
                     <td>
-                      <div className="flex justify-center space-x-1 min-w-0">
+                      <div className="flex justify-center space-x-2 min-w-0">
                         <Link
                           to={`/departments/view/${dept.id}`}
-                          className="btn btn-sm btn-ghost btn-square flex-shrink-0"
+                          className="btn btn-sm btn-ghost bg-gray-700 border-gray-600 text-gray-300 hover:bg-gray-600 hover:border-gray-500"
                           title="View Details"
                         >
                           <svg
@@ -348,7 +383,7 @@ const DepartmentList = () => {
 
                         <Link
                           to={`/departments/edit/${dept.id}`}
-                          className="btn btn-sm btn-ghost btn-square flex-shrink-0"
+                          className="btn btn-sm btn-ghost bg-blue-900/50 border-blue-800/50 text-blue-300 hover:bg-blue-800/50"
                           title="Edit Department"
                         >
                           <svg
@@ -368,10 +403,10 @@ const DepartmentList = () => {
 
                         <button
                           onClick={() => handleDelete(dept)}
-                          className={`btn btn-sm btn-ghost btn-square flex-shrink-0 ${
+                          className={`btn btn-sm btn-ghost flex-shrink-0 ${
                             dept.employee_count > 0
-                              ? "text-gray-400 cursor-not-allowed"
-                              : "text-error"
+                              ? "bg-gray-700 border-gray-600 text-gray-400 cursor-not-allowed"
+                              : "bg-red-900/50 border-red-800/50 text-red-300 hover:bg-red-800/50"
                           }`}
                           title={
                             dept.employee_count > 0
@@ -412,17 +447,20 @@ const DepartmentList = () => {
 
             {/* Empty State */}
             {filteredDepartments.length === 0 && (
-              <div className="text-center py-12">
-                <div className="text-6xl mb-4">🏢</div>
-                <h3 className="text-lg font-semibold mb-2">
+              <div className="text-center py-16">
+                <div className="text-6xl mb-4 opacity-50">🏢</div>
+                <h3 className="text-xl font-bold text-gray-300 mb-3">
                   No departments found
                 </h3>
-                <p className="text-gray-500 mb-4">
+                <p className="text-gray-500 mb-6 max-w-md mx-auto">
                   {searchTerm
-                    ? "Try adjusting your search terms"
-                    : "No departments have been created yet"}
+                    ? "Try adjusting your search terms to find what you're looking for."
+                    : "No departments have been created in the system yet."}
                 </p>
-                <Link to="/departments/new" className="btn btn-primary">
+                <Link
+                  to="/departments/new"
+                  className="btn bg-gradient-to-r from-blue-500 to-purple-600 border-none text-white hover:from-blue-600 hover:to-purple-700"
+                >
                   Create Your First Department
                 </Link>
               </div>

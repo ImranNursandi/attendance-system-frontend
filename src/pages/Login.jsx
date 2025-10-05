@@ -58,19 +58,20 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center p-4">
       {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-32 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
-        <div className="absolute -bottom-40 -left-32 w-80 h-80 bg-yellow-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
-        <div className="absolute top-40 left-1/2 w-80 h-80 bg-pink-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
+        <div className="absolute -top-40 -right-32 w-80 h-80 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
+        <div className="absolute -bottom-40 -left-32 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
+        <div className="absolute top-40 left-1/2 w-80 h-80 bg-cyan-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
       </div>
 
       <div className="relative w-full max-w-md">
-        <div className="card glass shadow-2xl backdrop-blur-lg border border-white/20">
+        <div className="card bg-gradient-to-b from-gray-800 to-gray-900 shadow-2xl border border-gray-700 rounded-2xl">
           <div className="card-body p-8">
+            {/* Header */}
             <div className="text-center mb-8">
-              <div className="w-20 h-20 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+              <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
                 <svg
                   className="w-10 h-10 text-white"
                   fill="none"
@@ -85,25 +86,55 @@ const Login = () => {
                   />
                 </svg>
               </div>
-              <h1 className="text-3xl font-bold text-white mb-2">
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-100 to-gray-300 bg-clip-text text-transparent mb-2">
                 Welcome Back
               </h1>
-              <p className="text-purple-200">
+              <p className="text-gray-400">
                 Sign in to your attendance account
               </p>
+            </div>
+
+            {/* Contact Administrator Notice */}
+            <div className="mb-6 p-4 bg-blue-900/30 rounded-xl border border-blue-800/50">
+              <div className="flex items-start gap-3">
+                <div className="bg-blue-500/20 p-2 rounded-lg flex-shrink-0">
+                  <svg
+                    className="w-5 h-5 text-blue-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                </div>
+                <div className="flex-1">
+                  <h4 className="text-blue-300 text-sm font-semibold mb-1">
+                    Need Access?
+                  </h4>
+                  <p className="text-blue-400/80 text-xs">
+                    Contact your administrator to get login credentials and
+                    system access.
+                  </p>
+                </div>
+              </div>
             </div>
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               <div className="form-control">
                 <label className="label">
-                  <span className="label-text text-white text-sm font-semibold">
-                    Username or Email
+                  <span className="label-text text-gray-300 text-sm font-semibold">
+                    Username
                   </span>
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <svg
-                      className="w-5 h-5 text-purple-400"
+                      className="w-5 h-5 text-blue-400"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -118,15 +149,15 @@ const Login = () => {
                   </div>
                   <input
                     type="text"
-                    placeholder="Enter your username or email"
-                    className="input input-bordered w-full pl-10 bg-white/10 border-white/20 text-white placeholder-purple-200 focus:bg-white/20 focus:border-purple-400 transition-all duration-300"
+                    placeholder="Enter your username"
+                    className="input input-bordered w-full pl-10 bg-gray-700/50 border-gray-600 text-white placeholder-gray-400 focus:bg-gray-600/50 focus:border-blue-500 transition-all duration-300 h-12"
                     {...register("username", {
-                      required: "Username or email is required",
+                      required: "Username is required",
                     })}
                   />
                 </div>
                 {errors.username && (
-                  <span className="text-pink-300 text-sm mt-2 flex items-center">
+                  <span className="text-red-400 text-sm mt-2 flex items-center">
                     <svg
                       className="w-4 h-4 mr-1"
                       fill="currentColor"
@@ -145,14 +176,14 @@ const Login = () => {
 
               <div className="form-control">
                 <label className="label">
-                  <span className="label-text text-white text-sm font-semibold">
+                  <span className="label-text text-gray-300 text-sm font-semibold">
                     Password
                   </span>
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <svg
-                      className="w-5 h-5 text-purple-400"
+                      className="w-5 h-5 text-blue-400"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -168,7 +199,7 @@ const Login = () => {
                   <input
                     type="password"
                     placeholder="Enter your password"
-                    className="input input-bordered w-full pl-10 bg-white/10 border-white/20 text-white placeholder-purple-200 focus:bg-white/20 focus:border-purple-400 transition-all duration-300"
+                    className="input input-bordered w-full pl-10 bg-gray-700/50 border-gray-600 text-white placeholder-gray-400 focus:bg-gray-600/50 focus:border-blue-500 transition-all duration-300 h-12"
                     {...register("password", {
                       required: "Password is required",
                       minLength: {
@@ -179,7 +210,7 @@ const Login = () => {
                   />
                 </div>
                 {errors.password && (
-                  <span className="text-pink-300 text-sm mt-2 flex items-center">
+                  <span className="text-red-400 text-sm mt-2 flex items-center">
                     <svg
                       className="w-4 h-4 mr-1"
                       fill="currentColor"
@@ -199,7 +230,7 @@ const Login = () => {
               <div className="form-control mt-8">
                 <button
                   type="submit"
-                  className="btn btn-primary btn-lg w-full bg-gradient-to-r from-purple-600 to-pink-600 border-0 text-white hover:from-purple-700 hover:to-pink-700 transform hover:scale-105 transition-all duration-300 shadow-lg"
+                  className="btn btn-lg w-full bg-gradient-to-r from-blue-500 to-purple-600 border-0 text-white hover:from-blue-600 hover:to-purple-700 transform hover:scale-105 transition-all duration-300 shadow-lg h-12"
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? (
@@ -229,12 +260,12 @@ const Login = () => {
               </div>
             </form>
 
-            {/* Demo Credentials */}
-            <div className="mt-8 p-4 bg-white/10 rounded-xl border border-white/20">
-              <div className="flex items-start space-x-3">
-                <div className="bg-yellow-500/20 p-2 rounded-lg">
+            {/* Support Information */}
+            <div className="mt-8 p-4 bg-gray-700/30 rounded-xl border border-gray-600">
+              <div className="flex items-start gap-3">
+                <div className="bg-cyan-500/20 p-2 rounded-lg flex-shrink-0">
                   <svg
-                    className="w-5 h-5 text-yellow-300"
+                    className="w-5 h-5 text-cyan-400"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -243,29 +274,37 @@ const Login = () => {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       strokeWidth="2"
-                      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192L5.636 18.364M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                     />
                   </svg>
                 </div>
                 <div className="flex-1">
-                  <h4 className="text-white text-sm font-semibold">
-                    Demo Credentials
+                  <h4 className="text-cyan-300 text-sm font-semibold mb-2">
+                    Having Trouble?
                   </h4>
-                  <div className="text-purple-200 text-xs mt-1 space-y-1">
-                    <div>
-                      <strong>Admin:</strong> admin@company.com / admin123
-                    </div>
-                    <div>
-                      <strong>Manager:</strong> jane.smith@company.com /
-                      Welcome123
-                    </div>
-                    <div>
-                      <strong>Employee:</strong> john.doe@company.com /
-                      Welcome123
-                    </div>
+                  <div className="text-cyan-400/80 text-xs space-y-1">
+                    <p className="flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 bg-cyan-400 rounded-full"></span>
+                      Ensure you have valid login credentials
+                    </p>
+                    <p className="flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 bg-cyan-400 rounded-full"></span>
+                      Contact system administrator for account setup
+                    </p>
+                    <p className="flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 bg-cyan-400 rounded-full"></span>
+                      Make sure your account is active
+                    </p>
                   </div>
                 </div>
               </div>
+            </div>
+
+            {/* Footer */}
+            <div className="text-center mt-6 pt-4 border-t border-gray-700">
+              <p className="text-gray-500 text-xs">
+                Secure Attendance System • v1.0
+              </p>
             </div>
           </div>
         </div>

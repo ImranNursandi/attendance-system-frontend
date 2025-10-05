@@ -71,30 +71,31 @@ const EmployeeList = () => {
     setCurrentPage(1);
   }, [statusFilter, departmentFilter]);
 
-  // Get unique departments from current employees for display
-  const currentDepartments = [
-    ...new Set(employees.map((emp) => emp.department?.name).filter(Boolean)),
-  ];
-
   // Status badge component
-  const StatusBadge = ({ isActive, status }) => {
-    if (status) {
-      const statusConfig = {
-        active: { label: "Active", color: "badge-success" },
-        inactive: { label: "Inactive", color: "badge-error" },
-        suspended: { label: "Suspended", color: "badge-warning" },
-      };
+  const StatusBadge = ({ status }) => {
+    const statusConfig = {
+      active: {
+        label: "Active",
+        color: "bg-green-900/50 text-green-300 border-green-800/50",
+      },
+      inactive: {
+        label: "Inactive",
+        color: "bg-red-900/50 text-red-300 border-red-800/50",
+      },
+      suspended: {
+        label: "Suspended",
+        color: "bg-orange-900/50 text-orange-300 border-orange-800/50",
+      },
+    };
 
-      const config = statusConfig[status] || {
-        label: status,
-        color: "badge-info",
-      };
-      return <span className={`badge ${config.color}`}>{config.label}</span>;
-    }
+    const config = statusConfig[status] || {
+      label: status || "Unknown",
+      color: "bg-gray-700 text-gray-300 border-gray-600",
+    };
 
     return (
-      <span className={`badge ${isActive ? "badge-success" : "badge-error"}`}>
-        {isActive ? "Active" : "Inactive"}
+      <span className={`badge badge-sm border ${config.color}`}>
+        {config.label}
       </span>
     );
   };
@@ -122,7 +123,7 @@ const EmployeeList = () => {
       buttons.push(
         <button
           key={1}
-          className="join-item btn btn-sm"
+          className="join-item btn btn-sm bg-gray-700 border-gray-600 text-white hover:bg-gray-600"
           onClick={() => handlePageChange(1)}
         >
           1
@@ -130,7 +131,10 @@ const EmployeeList = () => {
       );
       if (startPage > 2) {
         buttons.push(
-          <button key="ellipsis1" className="join-item btn btn-sm btn-disabled">
+          <button
+            key="ellipsis1"
+            className="join-item btn btn-sm bg-gray-700 border-gray-600 text-gray-400"
+          >
             ...
           </button>
         );
@@ -141,8 +145,10 @@ const EmployeeList = () => {
       buttons.push(
         <button
           key={i}
-          className={`join-item btn btn-sm ${
-            currentPage === i ? "btn-active btn-primary" : ""
+          className={`join-item btn btn-sm border-gray-600 ${
+            currentPage === i
+              ? "bg-gradient-to-r from-blue-500 to-purple-600 border-none text-white"
+              : "bg-gray-700 text-white hover:bg-gray-600"
           }`}
           onClick={() => handlePageChange(i)}
         >
@@ -154,7 +160,10 @@ const EmployeeList = () => {
     if (endPage < totalPages) {
       if (endPage < totalPages - 1) {
         buttons.push(
-          <button key="ellipsis2" className="join-item btn btn-sm btn-disabled">
+          <button
+            key="ellipsis2"
+            className="join-item btn btn-sm bg-gray-700 border-gray-600 text-gray-400"
+          >
             ...
           </button>
         );
@@ -162,7 +171,7 @@ const EmployeeList = () => {
       buttons.push(
         <button
           key={totalPages}
-          className="join-item btn btn-sm"
+          className="join-item btn btn-sm bg-gray-700 border-gray-600 text-white hover:bg-gray-600"
           onClick={() => handlePageChange(totalPages)}
         >
           {totalPages}
@@ -175,123 +184,138 @@ const EmployeeList = () => {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center min-h-64">
-        <span className="loading loading-spinner loading-lg text-primary"></span>
-        <span className="ml-3">Loading employees...</span>
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-6">
+        <div className="max-w-7xl mx-auto flex justify-center items-center min-h-64">
+          <div className="text-center">
+            <div className="loading loading-spinner loading-lg text-blue-400"></div>
+            <p className="text-gray-400 mt-3">Loading employees...</p>
+          </div>
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="alert alert-error shadow-lg">
-        <div>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="stroke-current flex-shrink-0 h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
-          <span>Error loading employees: {error.message}</span>
-        </div>
-        <div className="flex-none">
-          <button onClick={() => refetch()} className="btn btn-sm btn-ghost">
-            Retry
-          </button>
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="bg-red-900/50 border border-red-800/50 rounded-2xl p-6 text-white">
+            <div className="flex items-center gap-4">
+              <div className="text-2xl">⚠️</div>
+              <div className="flex-1">
+                <h3 className="font-bold text-lg">Error loading employees</h3>
+                <p className="text-red-200 mt-1">{error.message}</p>
+              </div>
+              <button
+                onClick={() => refetch()}
+                className="btn btn-outline border-red-700 text-red-300 hover:bg-red-800/50"
+              >
+                Retry
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
-      {/* Header Section */}
-      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
-        <div>
-          <h1 className="text-3xl font-bold">Employee Management</h1>
-          <p className="text-gray-600 mt-1">
-            Manage your team members and their information
-          </p>
-        </div>
-        {role === "admin" && (
-          <Link to="/employees/new" className="btn btn-primary">
-            <svg
-              className="w-5 h-5 mr-2"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-6">
+      <div className="max-w-7xl mx-auto space-y-8">
+        {/* Header Section */}
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+          <div>
+            <h1 className="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+              Employee Management
+            </h1>
+            <p className="text-gray-400 mt-2">
+              Manage your team members and their information
+            </p>
+          </div>
+          {role === "admin" && (
+            <Link
+              to="/employees/new"
+              className="btn bg-gradient-to-r from-blue-500 to-purple-600 border-none text-white hover:from-blue-600 hover:to-purple-700 px-6"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M12 4v16m8-8H4"
-              />
-            </svg>
-            Add Employee
-          </Link>
-        )}
-      </div>
+              <svg
+                className="w-5 h-5 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M12 4v16m8-8H4"
+                />
+              </svg>
+              Add Employee
+            </Link>
+          )}
+        </div>
 
-      {/* Stats Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="stat bg-base-200 rounded-lg">
-          <div className="stat-title">Total Employees</div>
-          <div className="stat-value text-primary">{pagination.total || 0}</div>
-          <div className="stat-desc">All team members</div>
-        </div>
-        <div className="stat bg-base-200 rounded-lg">
-          <div className="stat-title">Active</div>
-          <div className="stat-value text-success">
-            {
-              employees.filter(
-                (emp) => emp.is_active || emp.status === "active"
-              ).length
-            }
+        {/* Stats Overview */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="bg-gray-800 rounded-2xl p-6 border border-gray-700">
+            <div className="text-gray-400 text-sm font-semibold">
+              Total Employees
+            </div>
+            <div className="text-3xl font-bold text-blue-400 mt-2">
+              {pagination.total || 0}
+            </div>
+            <div className="text-gray-500 text-sm mt-1">All team members</div>
           </div>
-          <div className="stat-desc">Currently working</div>
-        </div>
-        <div className="stat bg-base-200 rounded-lg">
-          <div className="stat-title">Departments</div>
-          <div className="stat-value text-secondary">
-            {allDepartments.length}
+          <div className="bg-gray-800 rounded-2xl p-6 border border-gray-700">
+            <div className="text-gray-400 text-sm font-semibold">Active</div>
+            <div className="text-3xl font-bold text-green-400 mt-2">
+              {
+                employees.filter(
+                  (emp) => emp.is_active || emp.status === "active"
+                ).length
+              }
+            </div>
+            <div className="text-gray-500 text-sm mt-1">Currently working</div>
           </div>
-          <div className="stat-desc">Across organization</div>
-        </div>
-        <div className="stat bg-base-200 rounded-lg">
-          <div className="stat-title">This Page</div>
-          <div className="stat-value text-accent">{employees.length}</div>
-          <div className="stat-desc">
-            Page {currentPage} of {pagination.total_page || 1}
+          <div className="bg-gray-800 rounded-2xl p-6 border border-gray-700">
+            <div className="text-gray-400 text-sm font-semibold">
+              Departments
+            </div>
+            <div className="text-3xl font-bold text-purple-400 mt-2">
+              {allDepartments.length}
+            </div>
+            <div className="text-gray-500 text-sm mt-1">
+              Across organization
+            </div>
+          </div>
+          <div className="bg-gray-800 rounded-2xl p-6 border border-gray-700">
+            <div className="text-gray-400 text-sm font-semibold">This Page</div>
+            <div className="text-3xl font-bold text-cyan-400 mt-2">
+              {employees.length}
+            </div>
+            <div className="text-gray-500 text-sm mt-1">
+              Page {currentPage} of {pagination.total_page || 1}
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Filters and Search Card */}
-      <div className="card bg-base-100 shadow-xl">
-        <div className="card-body">
-          <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
-            <div className="flex flex-col lg:flex-row gap-4 flex-1">
+        {/* Filters and Search Card */}
+        <div className="bg-gray-800 rounded-2xl shadow-lg border border-gray-700 p-6">
+          <div className="flex flex-col lg:flex-row gap-6 items-start lg:items-center justify-between">
+            <div className="flex flex-col lg:flex-row gap-4 flex-1 w-full">
               {/* Search Input */}
               <div className="form-control flex-1">
-                <div className="input-group">
+                <div className="relative">
                   <input
                     type="text"
                     placeholder="Search by name, employee ID, or position..."
-                    className="input input-bordered flex-1"
+                    className="w-full input input-bordered bg-gray-700 border-gray-600 text-white placeholder-gray-500 pl-10 h-12"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
-                  <button className="btn btn-square">
+                  <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
                     <svg
-                      className="w-4 h-4"
+                      className="w-5 h-5"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -303,28 +327,29 @@ const EmployeeList = () => {
                         d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                       />
                     </svg>
-                  </button>
+                  </div>
                 </div>
               </div>
 
               {/* Status Filter */}
               <div className="form-control">
                 <select
-                  className="select select-bordered"
+                  className="select select-bordered bg-gray-700 border-gray-600 text-white h-12 min-w-40"
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
                 >
                   <option value="all">All Status</option>
                   <option value="active">Active</option>
                   <option value="inactive">Inactive</option>
+                  <option value="suspended">Suspended</option>
                 </select>
               </div>
 
-              {/* Department Filter - Now using IDs */}
+              {/* Department Filter */}
               {allDepartments.length > 0 && (
                 <div className="form-control">
                   <select
-                    className="select select-bordered"
+                    className="select select-bordered bg-gray-700 border-gray-600 text-white h-12 min-w-48"
                     value={departmentFilter}
                     onChange={(e) => setDepartmentFilter(e.target.value)}
                   >
@@ -339,50 +364,69 @@ const EmployeeList = () => {
               )}
             </div>
 
-            <div className="text-sm opacity-75">
+            <div className="text-gray-400 text-sm bg-gray-700/50 px-3 py-2 rounded-lg border border-gray-600">
               {pagination.total || 0} total employees
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Employees Table Card */}
-      <div className="card bg-base-100 shadow-xl">
-        <div className="card-body p-0">
+        {/* Employees Table Card */}
+        <div className="bg-gray-800 rounded-2xl shadow-lg border border-gray-700 overflow-hidden">
+          <div className="p-6 border-b border-gray-700">
+            <div className="flex items-center gap-3">
+              <div className="w-2 h-6 bg-green-500 rounded-full"></div>
+              <h2 className="text-xl font-bold text-white">Employees</h2>
+            </div>
+          </div>
+
           <div className="overflow-x-auto">
-            <table className="table table-zebra">
+            <table className="table w-full">
               <thead>
-                <tr className="bg-base-200">
-                  <th className="w-16">#</th>
-                  <th>Employee</th>
-                  <th>Employee ID</th>
-                  <th>Department</th>
-                  <th>Position</th>
-                  <th>Status</th>
-                  <th className="text-center">Actions</th>
+                <tr className="border-b border-gray-700">
+                  <th className="bg-gray-750 text-gray-300 font-semibold w-16">
+                    #
+                  </th>
+                  <th className="bg-gray-750 text-gray-300 font-semibold">
+                    Employee
+                  </th>
+                  <th className="bg-gray-750 text-gray-300 font-semibold">
+                    Employee ID
+                  </th>
+                  <th className="bg-gray-750 text-gray-300 font-semibold">
+                    Department
+                  </th>
+                  <th className="bg-gray-750 text-gray-300 font-semibold">
+                    Position
+                  </th>
+                  <th className="bg-gray-750 text-gray-300 font-semibold">
+                    Status
+                  </th>
+                  <th className="bg-gray-750 text-gray-300 font-semibold text-center">
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {employees.map((employee, index) => (
                   <tr
                     key={employee.id}
-                    className="hover:bg-base-200 transition-colors"
+                    className="border-b border-gray-700 hover:bg-gray-750/50 transition-colors"
                   >
-                    <td className="font-semibold">
+                    <td className="text-gray-300 font-medium">
                       {(currentPage - 1) * (pagination.limit || 10) + index + 1}
                     </td>
                     <td>
-                      <div className="flex items-center space-x-3">
+                      <div className="flex items-center space-x-4">
                         <div className="avatar placeholder">
-                          <div className="bg-primary text-primary-content rounded-full w-12">
-                            <span className="font-bold">
-                              {employee.name?.charAt(0)?.toUpperCase() || "E"}
-                            </span>
+                          <div className="bg-gradient-to-br from-blue-500 to-purple-600 text-white rounded-xl w-12 h-12 flex items-center justify-center font-bold shadow-lg">
+                            {employee.name?.charAt(0)?.toUpperCase() || "E"}
                           </div>
                         </div>
                         <div>
-                          <div className="font-bold">{employee.name}</div>
-                          <div className="text-sm opacity-75">
+                          <div className="font-bold text-white">
+                            {employee.name}
+                          </div>
+                          <div className="text-sm text-gray-400">
                             {employee.phone || "No phone"}
                           </div>
                           {employee.email && (
@@ -394,34 +438,31 @@ const EmployeeList = () => {
                       </div>
                     </td>
                     <td>
-                      <span className="font-mono badge badge-outline">
+                      <span className="font-mono badge bg-blue-900/50 text-blue-300 border-blue-800/50">
                         {employee.employee_id}
                       </span>
                     </td>
                     <td>
-                      <span className="badge badge-ghost">
+                      <span className="badge bg-gray-700 text-gray-300 border-gray-600">
                         {employee.department?.name || (
                           <span className="text-gray-400">No Department</span>
                         )}
                       </span>
                     </td>
-                    <td>
+                    <td className="text-gray-300">
                       {employee.position || (
-                        <span className="text-gray-400">Not specified</span>
+                        <span className="text-gray-500">Not specified</span>
                       )}
                     </td>
                     <td>
-                      <StatusBadge
-                        isActive={employee.is_active}
-                        status={employee.status}
-                      />
+                      <StatusBadge status={employee.status} />
                     </td>
                     <td>
-                      <div className="flex justify-center space-x-1">
+                      <div className="flex justify-center space-x-2">
                         {/* View Button - All roles */}
                         <Link
                           to={`/employees/view/${employee.id}`}
-                          className="btn btn-sm btn-ghost btn-square"
+                          className="btn btn-sm btn-ghost bg-gray-700 border-gray-600 text-gray-300 hover:bg-gray-600 hover:border-gray-500"
                           title="View Details"
                         >
                           <svg
@@ -450,7 +491,7 @@ const EmployeeList = () => {
                           <>
                             <Link
                               to={`/employees/edit/${employee.id}`}
-                              className="btn btn-sm btn-ghost btn-square"
+                              className="btn btn-sm btn-ghost bg-blue-900/50 border-blue-800/50 text-blue-300 hover:bg-blue-800/50"
                               title="Edit Employee"
                             >
                               <svg
@@ -492,7 +533,7 @@ const EmployeeList = () => {
                                   });
                                 }
                               }}
-                              className="btn btn-sm btn-ghost btn-square text-error"
+                              className="btn btn-sm btn-ghost bg-red-900/50 border-red-800/50 text-red-300 hover:bg-red-800/50"
                               title="Delete Employee"
                               disabled={deleteMutation.isLoading}
                             >
@@ -525,20 +566,23 @@ const EmployeeList = () => {
 
             {/* Empty State */}
             {employees.length === 0 && (
-              <div className="text-center py-12">
-                <div className="text-6xl mb-4">👥</div>
-                <h3 className="text-lg font-semibold mb-2">
+              <div className="text-center py-16">
+                <div className="text-6xl mb-4 opacity-50">👥</div>
+                <h3 className="text-xl font-bold text-gray-300 mb-3">
                   No employees found
                 </h3>
-                <p className="text-gray-500 mb-4">
+                <p className="text-gray-500 mb-6 max-w-md mx-auto">
                   {searchTerm ||
                   statusFilter !== "all" ||
                   departmentFilter !== "all"
-                    ? "Try adjusting your search or filters"
-                    : "No employees have been added yet"}
+                    ? "Try adjusting your search or filters to find what you're looking for."
+                    : "No employees have been added to the system yet."}
                 </p>
                 {role === "admin" && (
-                  <Link to="/employees/new" className="btn btn-primary">
+                  <Link
+                    to="/employees/new"
+                    className="btn bg-gradient-to-r from-blue-500 to-purple-600 border-none text-white hover:from-blue-600 hover:to-purple-700"
+                  >
                     Add Your First Employee
                   </Link>
                 )}
@@ -548,8 +592,8 @@ const EmployeeList = () => {
 
           {/* Pagination */}
           {pagination.total_page > 1 && (
-            <div className="flex flex-col sm:flex-row justify-between items-center p-4 border-t gap-4">
-              <div className="text-sm opacity-75">
+            <div className="flex flex-col sm:flex-row justify-between items-center p-6 border-t border-gray-700 gap-4">
+              <div className="text-gray-400 text-sm">
                 Showing {(currentPage - 1) * (pagination.limit || 10) + 1} to{" "}
                 {Math.min(
                   currentPage * (pagination.limit || 10),
@@ -560,7 +604,7 @@ const EmployeeList = () => {
 
               <div className="join">
                 <button
-                  className="join-item btn btn-sm"
+                  className="join-item btn btn-sm bg-gray-700 border-gray-600 text-white hover:bg-gray-600 disabled:bg-gray-800 disabled:text-gray-500"
                   disabled={currentPage === 1}
                   onClick={() => handlePageChange(currentPage - 1)}
                 >
@@ -570,7 +614,7 @@ const EmployeeList = () => {
                 {renderPaginationButtons()}
 
                 <button
-                  className="join-item btn btn-sm"
+                  className="join-item btn btn-sm bg-gray-700 border-gray-600 text-white hover:bg-gray-600 disabled:bg-gray-800 disabled:text-gray-500"
                   disabled={currentPage === pagination.total_page}
                   onClick={() => handlePageChange(currentPage + 1)}
                 >
