@@ -297,15 +297,14 @@ const Sidebar = () => {
           {/* Logout Button */}
           <button
             onClick={() => {
-              // Add logout logic here
-              console.log("Logout clicked");
+              handleLogout;
             }}
             className="flex items-center gap-4 p-4 rounded-2xl transition-all duration-200 group w-full bg-gray-800/50 hover:bg-red-900/50 text-gray-300 hover:text-white border border-transparent hover:border-red-800/50"
           >
             <div className="p-3 rounded-xl bg-gradient-to-r from-red-500 to-red-600 shadow-md group-hover:scale-110 transition-transform duration-200">
               <span className="text-xl">🚪</span>
             </div>
-            <div className="flex-1 text-left" onClick={handleLogout}>
+            <div className="flex-1 text-left">
               <div className="font-semibold group-hover:text-red-100">
                 Logout
               </div>

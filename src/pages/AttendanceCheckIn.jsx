@@ -75,8 +75,6 @@ const AttendanceCheckIn = () => {
   const onSubmitCheckIn = (data) => {
     const employeeId =
       role === "employee" ? user.employee_id : selectedEmployeeId;
-    console.log(user);
-    console.log(selectedEmployeeId);
 
     if (!employeeId) {
       toast.error("Please select an employee");
