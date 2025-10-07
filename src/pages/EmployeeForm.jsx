@@ -106,63 +106,83 @@ const EmployeeForm = () => {
           const responseData = response.data.data;
           const employeeData = responseData.employee || responseData;
           const generatedEmployeeId = employeeData.employee_id;
+          const setupToken = responseData.setup_token;
 
-          if (responseData.user_account?.created) {
-            toast.success(
-              <div className="text-black">
-                <p className="font-bold text-lg mb-3">
-                  ✅ Employee Created Successfully!
-                </p>
-                <div className="space-y-2 text-sm bg-gray-800/50 p-4 rounded-lg">
-                  <div className="flex items-center gap-2">
-                    <span className="font-semibold text-gray-300">
-                      Employee ID:
-                    </span>
-                    <span className="badge badge-primary bg-blue-600 border-blue-700">
-                      {generatedEmployeeId}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="font-semibold text-gray-300">
-                      Username:
-                    </span>
-                    <span className="badge badge-outline border-gray-600 text-gray-300">
-                      {responseData.user_account.username}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="font-semibold text-gray-300">
-                      Default Password:
-                    </span>
-                    <span className="badge badge-warning bg-orange-600 border-orange-700">
-                      {responseData.user_account.password}
-                    </span>
-                  </div>
-                  <p className="text-xs text-gray-400 mt-2 border-t border-gray-700 pt-2">
-                    User account created automatically. Employee must change
-                    password on first login.
+          // Success toast with account setup information
+          toast.success(
+            <div className="text-black">
+              {/* Header */}
+              <p className="font-semibold text-lg mb-2 flex items-center gap-2">
+                ✅ Employee Created Successfully!
+              </p>
+
+              {/* Card container */}
+              <div className="bg-gray-800/70 rounded-lg border border-gray-700 p-4 space-y-3">
+                {/* Employee info */}
+                <div className="flex items-center justify-between text-sm">
+                  <span className="font-medium text-gray-300">
+                    Employee ID:
+                  </span>
+                  <span className="px-3 py-1 rounded-full text-xs font-semibold bg-blue-600 border border-blue-700">
+                    {generatedEmployeeId}
+                  </span>
+                </div>
+
+                <div className="flex items-center justify-between text-sm">
+                  <span className="font-medium text-gray-300">Status:</span>
+                  <span className="px-3 py-1 rounded-full text-xs font-semibold bg-yellow-600 border border-yellow-700 whitespace-normal text-center leading-tight">
+                    Awaiting Account Setup
+                  </span>
+                </div>
+
+                {/* Email info */}
+                <div className="p-3 bg-blue-900/40 rounded border border-blue-800/60 text-sm">
+                  <p className="text-blue-300 font-semibold mb-1">
+                    📧 Setup Email Sent
+                  </p>
+                  <p className="text-gray-300">
+                    An account setup email has been sent to{" "}
+                    <strong>{data.email}</strong>.
+                  </p>
+                  <p className="text-xs text-blue-400 mt-2">
+                    The employee must complete setup within 7 days.
                   </p>
                 </div>
-              </div>,
-              {
-                autoClose: 15000,
-                closeButton: true,
-                className: "bg-gray-800 border border-gray-700",
-              }
-            );
-          } else {
-            toast.success(
-              <div className="text-white">
-                <p className="font-bold">Employee Created Successfully!</p>
-                <p className="text-sm text-gray-300">
-                  Employee ID:{" "}
-                  <strong className="text-blue-400">
-                    {generatedEmployeeId}
-                  </strong>
-                </p>
+
+                {/* Backup token */}
+                {setupToken && (
+                  <div className="p-3 bg-orange-900/30 rounded border border-orange-800/50 text-sm">
+                    <p className="text-orange-300 font-semibold mb-2 flex items-center gap-1">
+                      🔑 Backup Setup Token
+                    </p>
+                    <div className="flex items-center gap-2">
+                      <code className="text-xs bg-black/50 p-2 rounded flex-1 break-all text-orange-200">
+                        {setupToken}
+                      </code>
+                      <button
+                        onClick={() => {
+                          navigator.clipboard.writeText(setupToken);
+                          toast.info("Setup token copied to clipboard");
+                        }}
+                        className="btn btn-xs btn-ghost text-orange-300"
+                      >
+                        Copy
+                      </button>
+                    </div>
+                    <p className="text-xs text-orange-400 mt-2">
+                      Use this token if the email fails to arrive.
+                    </p>
+                  </div>
+                )}
               </div>
-            );
-          }
+            </div>,
+            {
+              closeButton: true,
+              className:
+                "bg-gray-900 border border-gray-700 shadow-xl text-white rounded-lg",
+              progressClassName: "bg-blue-500",
+            }
+          );
 
           navigate("/employees");
         },
@@ -253,8 +273,8 @@ const EmployeeForm = () => {
                 ) : (
                   <div className="space-y-3">
                     <p>
-                      A system user account will be automatically created with
-                      the following details:
+                      A secure account setup process will be initiated with the
+                      following details:
                     </p>
                     <ul className="ml-4 space-y-2">
                       <li className="flex items-center gap-3">
@@ -279,25 +299,26 @@ const EmployeeForm = () => {
                         </span>
                       </li>
                       <li className="flex items-center gap-3">
-                        <span className="w-2 h-2 bg-blue-400 rounded-full flex-shrink-0"></span>
+                        <span className="w-2 h-2 bg-green-400 rounded-full flex-shrink-0"></span>
                         <span>
-                          <strong className="text-blue-300">
-                            Default Password:
+                          <strong className="text-green-300">
+                            Secure Setup:
                           </strong>{" "}
-                          Welcome123
+                          Employee will receive setup email
                         </span>
                       </li>
                       <li className="flex items-center gap-3">
-                        <span className="w-2 h-2 bg-blue-400 rounded-full flex-shrink-0"></span>
+                        <span className="w-2 h-2 bg-green-400 rounded-full flex-shrink-0"></span>
                         <span>
-                          <strong className="text-blue-300">Role:</strong>{" "}
-                          Employee
+                          <strong className="text-green-300">Security:</strong>{" "}
+                          No default password - employee sets their own
                         </span>
                       </li>
                       <li className="flex items-center gap-3">
-                        <span className="w-2 h-2 bg-blue-400 rounded-full flex-shrink-0"></span>
+                        <span className="w-2 h-2 bg-yellow-400 rounded-full flex-shrink-0"></span>
                         <span>
-                          Employee must change password on first login
+                          <strong className="text-yellow-300">Expiry:</strong>{" "}
+                          Setup link valid for 7 days
                         </span>
                       </li>
                     </ul>
@@ -590,7 +611,8 @@ const EmployeeForm = () => {
                     {isEdit ? "Updating Employee..." : "Creating Employee..."}
                   </p>
                   <p className="text-gray-400 text-sm mt-1">
-                    Please wait while we process your request
+                    {!isEdit && "Sending account setup email..."}
+                    {isEdit && "Updating employee details..."}
                   </p>
                 </div>
               </div>

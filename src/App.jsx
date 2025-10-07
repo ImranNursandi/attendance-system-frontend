@@ -31,6 +31,7 @@ import DepartmentView from "./pages/DepartmentView";
 import ManagerDashboard from "./pages/ManagerDashboard";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import SetupAccount from "./pages/SetupAccount";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -142,6 +143,14 @@ const router = createBrowserRouter([
     element: (
       <PublicRoute>
         <Login />
+      </PublicRoute>
+    ),
+  },
+  {
+    path: "/setup-account",
+    element: (
+      <PublicRoute>
+        <SetupAccount />
       </PublicRoute>
     ),
   },
